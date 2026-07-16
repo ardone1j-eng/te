@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân hàng câu hỏi Sinh học - Bài 36: Khái quát về Di truyền học</title>
+    <style>
+        :root {
+            --primary-color: #0f766e;
+            --primary-light: #f0fdfa;
+            --secondary-color: #2dd4bf;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --correct-color: #16a34a;
+            --correct-bg: #f0fdf4;
+            --incorrect-color: #dc2626;
+            --incorrect-bg: #fef2f2;
+            --highlight-color: #ea580c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #115e59);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        header p {
+            margin: 10px 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .quiz-info {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .quiz-info h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .section-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .question-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-color);
+        }
+
+        .question-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-num {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        /* Multiple Choice Styles */
+        .options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: var(--primary-light);
+            border-color: var(--secondary-color);
+        }
+
+        .option-label input {
+            margin-right: 12px;
+            margin-top: 4px;
+            accent-color: var(--primary-color);
+        }
+
+        /* True/False Sub-questions */
+        .tf-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .tf-table th, .tf-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+        }
+
+        .tf-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .tf-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tf-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tf-label input {
+            margin-right: 6px;
+            accent-color: var(--primary-color);
+        }
+
+        /* Short Answer Fill in the blank */
+        .short-answer-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .short-answer-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+        }
+
+        /* Feedbacks & Results styling */
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .feedback.correct {
+            display: block;
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-color);
+            color: #14532d;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-color);
+            color: #7f1d1d;
+        }
+
+        .explanation {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #4b5563;
+            border-top: 1px dashed rgba(0,0,0,0.1);
+            padding-top: 8px;
+        }
+
+        .action-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.4);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .btn-submit:hover {
+            background-color: #115e59;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        #result-box {
+            display: none;
+            background: linear-gradient(135deg, #115e59, #0f766e);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        #result-box h2 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 15px 0;
+            color: #2dd4bf;
+        }
+
+        .text-correct {
+            color: var(--correct-color);
+            font-weight: bold;
+        }
+        
+        .text-incorrect {
+            color: var(--incorrect-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>NGÂN HÀNG CÂU HỎI DI TRUYỀN HỌC</h1>
+        <p>Bài 36: Khái quát về Di truyền học - Sinh học 9 (Kết nối tri thức)</p>
+    </header>
+
+    <div class="container">
+        <div class="quiz-info">
+            <h3>Hướng dẫn làm bài:</h3>
+            <ul>
+                <li><strong>Phần I (Câu 1 - 40):</strong> Trắc nghiệm chọn 1 đáp án đúng nhất.</li>
+                <li><strong>Phần II (Câu 41 - 42):</strong> Đúng/Sai. Đánh giá Đ (Đúng) hoặc S (Sai) cho từng ý.</li>
+                <li><strong>Phần III (Câu 43 - 50):</strong> Điền từ thích hợp vào ô trống (chú ý gõ chữ thường, tiếng Việt có dấu).</li>
+                <li>Bấm nút <strong>"Nộp bài & Xem kết quả"</strong> dưới cùng để chấm điểm tự động và xem giải thích chi tiết.</li>
+            </ul>
+        </div>
+
+        <div id="result-box">
+            <h2>KẾT QUẢ BÀI LÀM CỦA BẠN</h2>
+            <div class="score-display" id="score-text">0 / 50</div>
+            <p id="result-summary">Bạn đã trả lời đúng ... câu hỏi.</p>
+        </div>
+
+        <form id="quiz-form">
+            <!-- PART I: MULTIPLE CHOICE (40 Questions) -->
+            <div class="section-title">PHẦN I: TRẮC NGHIỆM 4 ĐÁP ÁN (CÂU 1 - 40)</div>
+            <div id="multiple-choice-container"></div>
+
+            <!-- PART II: TRUE/FALSE (2 Questions, 5 items each) -->
+            <div class="section-title">PHẦN II: CÂU HỎI ĐÚNG / SAI (CÂU 41 - 42)</div>
+            <div id="true-false-container"></div>
+
+            <!-- PART III: SHORT ANSWER (8 Questions) -->
+            <div class="section-title">PHẦN III: CÂU HỎI TỰ LUẬN TRẢ LỜI NGẮN (CÂU 43 - 50)</div>
+            <div id="short-answer-container"></div>
+
+            <div class="action-container">
+                <button type="button" class="btn-submit" onclick="submitQuiz()">Nộp bài & Xem kết quả</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Dữ liệu 40 câu hỏi trắc nghiệm
+        const mcQuestions = [
+            {
+                id: 1,
+                question: "Hiện tượng truyền đạt các tính trạng của bố mẹ, tổ tiên cho các thế hệ con cháu được gọi là:",
+                options: [
+                    "Hiện tượng di truyền.",
+                    "Hiện tượng biến dị.",
+                    "Sự sinh trưởng của cơ thể.",
+                    "Sự phát triển của phôi."
+                ],
+                correct: 0,
+                explain: "Theo định nghĩa trong SGK, di truyền là hiện tượng truyền đạt các tính trạng của bố mẹ, tổ tiên cho các thế hệ con cháu."
+            },
+            {
+                id: 2,
+                question: "Hiện tượng con sinh ra có những đặc điểm khác nhau và khác với bố mẹ được gọi là:",
+                options: [
+                    "Sự đồng nhất tính trạng.",
+                    "Hiện tượng biến dị.",
+                    "Hiện tượng di truyền.",
+                    "Sự tiến hóa thích nghi."
+                ],
+                correct: 1,
+                explain: "Biến dị là hiện tượng con sinh ra có những đặc điểm khác nhau và khác bố mẹ."
+            },
+            {
+                id: 3,
+                question: "Nội dung nghiên cứu cốt lõi của môn Di truyền học là gì?",
+                options: [
+                    "Sự sinh sản và phân đôi tế bào.",
+                    "Sự tiến hóa cấu trúc của các cơ quan cơ thể.",
+                    "Tính di truyền và tính biến dị ở sinh vật.",
+                    "Sự chuyển hóa năng lượng bên trong tế bào."
+                ],
+                correct: 2,
+                explain: "Di truyền học là ngành khoa học nghiên cứu về tính di truyền và biến dị ở sinh vật."
+            },
+            {
+                id: 4,
+                question: "Vật chất di truyền nào nằm trong tế bào đóng vai trò quyết định, quy định tính di truyền và biến dị ở sinh vật (trung tâm của di truyền học)?",
+                options: [
+                    "Tế bào chất.",
+                    "Hợp chất Protein.",
+                    "Gene (nhân tố di truyền).",
+                    "Thành tế bào."
+                ],
+                correct: 2,
+                explain: "Hiện tượng di truyền và biến dị do nhân tố di truyền nằm trong tế bào (sau này gọi là gene) quy định, do đó gene được xem là trung tâm của di truyền học."
+            },
+            {
+                id: 5,
+                question: "Nhà khoa học nào được coi là người đặt nền móng đầu tiên cho Di truyền học bằng phương pháp nghiên cứu khoa học thực nghiệm?",
+                options: [
+                    "Charles Darwin.",
+                    "Thomas Hunt Morgan.",
+                    "Gregor Johann Mendel.",
+                    "Louis Pasteur."
+                ],
+                correct: 2,
+                explain: "Gregor Johann Mendel (1822 - 1884) là người đầu tiên vận dụng phương pháp khoa học vào việc nghiên cứu di truyền, đặt nền móng cho di truyền học."
+            },
+            {
+                id: 6,
+                question: "Mendel đã sử dụng đối tượng sinh vật chủ yếu nào cho các nghiên cứu lai giống kinh điển của mình?",
+                options: [
+                    "Ruồi giấm màu xám.",
+                    "Cây Đậu Hà Lan (Pisum sativum).",
+                    "Cây hoa phấn đỏ.",
+                    "Cây ngô hạt vàng."
+                ],
+                correct: 1,
+                explain: "Mendel đã chọn Đậu Hà Lan (Pisum sativum) làm đối tượng nghiên cứu chính."
+            },
+            {
+                id: 7,
+                question: "Vì sao Đậu Hà Lan lại là đối tượng vô cùng thuận lợi cho nghiên cứu của Mendel?",
+                options: [
+                    "Vì chúng có khả năng tự thụ phấn rất nghiêm ngặt, dễ tạo dòng thuần chủng.",
+                    "Vì chúng phát triển rất chậm, giúp có nhiều thời gian theo dõi.",
+                    "Vì chúng luôn giao phấn ngẫu nhiên trong tự nhiên tạo nhiều đột biến.",
+                    "Vì chúng chỉ biểu hiện duy nhất các tính trạng lặn qua các đời lai."
+                ],
+                correct: 0,
+                explain: "Đậu Hà Lan có khả năng tự thụ phấn khá nghiêm ngặt, giúp việc tạo ra và duy trì các dòng thuần chủng qua nhiều thế hệ trở nên dễ dàng."
+            },
+            {
+                id: 8,
+                question: "Trong di truyền học, thuật ngữ 'Tính trạng' được định nghĩa là gì?",
+                options: [
+                    "Là sự biến đổi liên tục của các đặc điểm bên ngoài do môi trường tác động.",
+                    "Là những đặc điểm về hình thái, cấu tạo, sinh lí của một cơ thể.",
+                    "Là các tổ hợp gene dị hợp trong nhân tế bào.",
+                    "Là cơ chế điều hòa hoạt động của một gene cụ thể."
+                ],
+                correct: 1,
+                explain: "Tính trạng là đặc điểm về hình thái, cấu tạo, sinh lí của một cơ thể sinh vật."
+            },
+            {
+                id: 9,
+                question: "Hai trạng thái biểu hiện trái ngược nhau của cùng một loại tính trạng được gọi là:",
+                options: [
+                    "Các allele đồng hợp trội.",
+                    "Cặp tính trạng tương phản.",
+                    "Dòng thuần chủng.",
+                    "Các biến dị tổ hợp liên tục."
+                ],
+                correct: 1,
+                explain: "Trạng thái biểu hiện trái ngược nhau của cùng một loại tính trạng gọi là tính trạng tương phản."
+            },
+            {
+                id: 10,
+                question: "Ví dụ nào sau đây thể hiện một 'cặp tính trạng tương phản' ở Đậu Hà Lan?",
+                options: [
+                    "Thân cao và hạt màu xanh.",
+                    "Quả màu vàng và vỏ hạt nhăn.",
+                    "Hạt màu vàng và hạt màu xanh.",
+                    "Hoa màu trắng và vỏ hạt nhẵn."
+                ],
+                correct: 2,
+                explain: "Hạt màu vàng và hạt màu xanh là hai trạng thái trái ngược nhau của cùng một tính trạng màu sắc hạt."
+            },
+            {
+                id: 11,
+                question: "Dòng thuần (hay dòng thuần chủng) là dòng sinh vật mang đặc tính nào?",
+                options: [
+                    "Có kiểu gene luôn dị hợp tử về tất cả các cặp gene.",
+                    "Thế hệ sau có kiểu hình phân li rất đa dạng và không đồng nhất.",
+                    "Có các cơ thể đồng hợp về tất cả các cặp gene, di truyền ổn định qua các thế hệ.",
+                    "Được tạo ra từ lai hai cơ thể khác loài."
+                ],
+                correct: 2,
+                explain: "Dòng thuần là các cơ thể đồng hợp về tất cả các cặp gene. Chúng có đặc tính di truyền đồng nhất, ổn định, thế hệ sau giống thế hệ trước."
+            },
+            {
+                id: 12,
+                question: "Trong thí nghiệm của Mendel, khi lai hai dòng đậu Hà Lan thuần chủng hoa tím và hoa trắng với nhau, thế hệ con lai F1 biểu hiện:",
+                options: [
+                    "100% cây hoa tím.",
+                    "100% cây hoa trắng.",
+                    "50% cây hoa tím và 50% cây hoa trắng.",
+                    "100% hoa hồng (lai trung gian)."
+                ],
+                correct: 0,
+                explain: "Ở đời F1, 100% cây thu được đều có hoa màu tím."
+            },
+            {
+                id: 13,
+                question: "Tính trạng biểu hiện ra kiểu hình khi có kiểu gene ở trạng thái đồng hợp trội hoặc dị hợp được gọi là:",
+                options: [
+                    "Tính trạng trội.",
+                    "Tính trạng lặn.",
+                    "Tính trạng trung gian.",
+                    "Biến dị kiểu hình."
+                ],
+                correct: 0,
+                explain: "Tính trạng trội biểu hiện ra kiểu hình khi có kiểu gene đồng hợp trội hoặc dị hợp."
+            },
+            {
+                id: 14,
+                question: "Tính trạng chỉ được biểu hiện ra kiểu hình khi kiểu gene ở trạng thái đồng hợp lặn được gọi là:",
+                options: [
+                    "Tính trạng lặn.",
+                    "Tính trạng trội.",
+                    "Tính trạng biến dị.",
+                    "Tính trạng trung gian."
+                ],
+                correct: 0,
+                explain: "Tính trạng lặn chỉ được biểu hiện ra kiểu hình khi có kiểu gene đồng hợp lặn."
+            },
+            {
+                id: 15,
+                question: "Khi cho các cây F1 hoa tím tự thụ phấn, đời F2 thu được tỉ lệ phân li kiểu hình xấp xỉ là:",
+                options: [
+                    "1 hoa tím : 1 hoa trắng.",
+                    "3 hoa tím : 1 hoa trắng.",
+                    "100% hoa tím thuần chủng.",
+                    "9 hoa tím : 7 hoa trắng."
+                ],
+                correct: 1,
+                explain: "Kết quả thí nghiệm ở thế hệ F2 là tỉ lệ xấp xỉ 3 cây hoa tím (trội) : 1 cây hoa trắng (lặn)."
+            },
+            {
+                id: 16,
+                question: "Giả thuyết của Mendel cho rằng mỗi tính trạng trên cơ thể sinh vật được quy định bởi:",
+                options: [
+                    "Dịch cơ chất lỏng hòa trộn từ bố mẹ.",
+                    "Một cặp nhân tố di truyền (ngày nay gọi là gene).",
+                    "Nhiệt độ của môi trường nuôi cấy.",
+                    "Sự sắp xếp ngẫu nhiên của các bào quan tế bào."
+                ],
+                correct: 1,
+                explain: "Mendel cho rằng đơn vị quy định sự di truyền của một tính trạng tồn tại thành từng cặp, gọi là cặp nhân tố di truyền (sau này gọi là gene)."
+            },
+            {
+                id: 17,
+                question: "Thuật ngữ 'Nhân tố di truyền' của Mendel tương đồng với khái niệm hiện đại nào?",
+                options: [
+                    "Nhiễm sắc thể.",
+                    "Gene (hoặc allele).",
+                    "Bào quan ty thể.",
+                    "Màng sinh chất tế bào."
+                ],
+                correct: 1,
+                explain: "Nhân tố di truyền chính là gene hay allele trong di truyền học hiện đại."
+            },
+            {
+                id: 18,
+                question: "Tổ hợp toàn bộ các gene trong tế bào của cơ thể sinh vật được gọi là:",
+                options: [
+                    "Kiểu gene.",
+                    "Kiểu hình.",
+                    "Dòng thuần.",
+                    "Nhiễm sắc thể."
+                ],
+                correct: 0,
+                explain: "Kiểu gene là tổ hợp toàn bộ gene trong tế bào của cơ thể sinh vật."
+            },
+            {
+                id: 19,
+                question: "Tổ hợp toàn bộ các tính trạng của cơ thể sinh vật được gọi là:",
+                options: [
+                    "Kiểu gene.",
+                    "Kiểu hình.",
+                    "Thể dị hợp.",
+                    "Kiểu allele."
+                ],
+                correct: 1,
+                explain: "Kiểu hình là tổ hợp toàn bộ tính trạng của cơ thể sinh vật."
+            },
+            {
+                id: 20,
+                question: "Các trạng thái biểu hiện khác nhau của cùng một gene được gọi là:",
+                options: [
+                    "Locus.",
+                    "Allele (Alen).",
+                    "Kiểu hình.",
+                    "Thể đột biến."
+                ],
+                correct: 1,
+                explain: "Allele là các trạng thái biểu hiện khác nhau của cùng một gene."
+            },
+            {
+                id: 21,
+                question: "Cơ thể thuần chủng về một tính trạng đang xét sẽ có kiểu gene:",
+                options: [
+                    "Chứa cặp allele gồm hai allele khác nhau hoàn toàn (dị hợp).",
+                    "Chứa cặp allele gồm hai allele giống nhau (đồng hợp).",
+                    "Không chứa bất kỳ allele lặn nào trong tế bào.",
+                    "Chứa nhiều allele đột biến cấu trúc phức tạp."
+                ],
+                correct: 1,
+                explain: "Cơ thể thuần chủng về một tính trạng khi cơ thể đó có kiểu gene quy định tính trạng đó ở trạng thái đồng hợp (gồm các allele giống nhau)."
+            },
+            {
+                id: 22,
+                question: "Trong kí hiệu di truyền học, chữ cái 'P' đại diện cho thế hệ nào?",
+                options: [
+                    "Thế hệ con lai thứ nhất.",
+                    "Thế hệ con lai thứ hai.",
+                    "Thế hệ bố mẹ xuất phát.",
+                    "Nhóm giao tử tham gia thụ tinh."
+                ],
+                correct: 2,
+                explain: "Kí hiệu P chỉ thế hệ xuất phát (Parentes)."
+            },
+            {
+                id: 23,
+                question: "Trong các sơ đồ lai di truyền, kí hiệu phép lai là:",
+                options: [
+                    "Chữ cái P.",
+                    "Chữ cái G.",
+                    "Kí hiệu x.",
+                    "Kí hiệu ♀."
+                ],
+                correct: 2,
+                explain: "Kí hiệu 'x' biểu thị phép lai trong nghiên cứu di truyền."
+            },
+            {
+                id: 24,
+                question: "Kí hiệu di truyền dùng để chỉ 'Giao tử' trong nghiên cứu lai giống là:",
+                options: [
+                    "Chữ cái F.",
+                    "Chữ cái G.",
+                    "Chữ cái P.",
+                    "Kí hiệu x."
+                ],
+                correct: 1,
+                explain: "Kí hiệu G dùng để chỉ các giao tử tham gia vào quá trình thụ tinh."
+            },
+            {
+                id: 25,
+                question: "Kí hiệu ♀ và ♂ lần lượt biểu thị cho:",
+                options: [
+                    "Cơ thể đực và cơ thể cái.",
+                    "Cơ thể cái và cơ thể đực.",
+                    "Thế hệ con lai F1 và F2.",
+                    "Giao tử trội và giao tử lặn."
+                ],
+                correct: 1,
+                explain: "♀ chỉ cơ thể cái (hoặc giới cái), ♂ chỉ cơ thể đực (hoặc giới đực)."
+            },
+            {
+                id: 26,
+                question: "Thế hệ con lai đầu tiên sinh ra từ phép lai giữa bố mẹ P được kí hiệu là:",
+                options: [
+                    "F2.",
+                    "F1.",
+                    "G.",
+                    "P1."
+                ],
+                correct: 1,
+                explain: "F1 (Filial 1) biểu thị cho đời con lai thứ nhất."
+            },
+            {
+                id: 27,
+                question: "Thế hệ con lai F2 được tạo ra bằng phương thức chủ yếu nào từ F1?",
+                options: [
+                    "Cho các cá thể đời F1 tự thụ phấn hoặc giao phấn với nhau.",
+                    "Cho các cá thể đời F1 lai phân tích với cây hoa trắng lặn.",
+                    "Cho các cá thể đời F1 lai ngược lại với cây bố mẹ P thuần chủng.",
+                    "Gieo các hạt đột biến từ đời P sang đời F1."
+                ],
+                correct: 0,
+                explain: "F2 là thế hệ con sinh ra từ F1 tự thụ phấn hoặc cho giao phấn giữa các cá thể F1 với nhau."
+            },
+            {
+                id: 28,
+                question: "Để đảm bảo các cây con lai ở thế hệ P có tính trạng giống hệt bố mẹ (thuần chủng), Mendel đã làm gì?",
+                options: [
+                    "Cho các cây đậu Hà Lan tự thụ phấn qua nhiều thế hệ.",
+                    "Tiến hành thụ phấn chéo liên tục giữa nhiều cây khác loài.",
+                    "Chỉ chọn lọc hạt lép để trồng thí nghiệm.",
+                    "Sử dụng chất hóa học để khử bỏ các tính trạng trội."
+                ],
+                correct: 0,
+                explain: "Để đảm bảo tính thuần chủng ở thế hệ P, Mendel cho các cây đậu tự thụ phấn qua nhiều thế hệ liên tiếp trước khi làm phép lai chéo."
+            },
+            {
+                id: 29,
+                question: "Hiện tượng nào sau đây phản ánh chính xác nhất khái niệm 'di truyền'?",
+                options: [
+                    "Con cái sinh ra thừa hưởng đặc điểm tóc xoăn từ bố mẹ.",
+                    "Người con có làn da đen sạm do đi tắm biển dài ngày.",
+                    "Cây xanh bị vàng lá do thiếu ánh sáng mặt trời.",
+                    "Hạt lúa biến tính mọc ra cây lúa khổng lồ do đột biến hóa chất."
+                ],
+                correct: 0,
+                explain: "Tóc xoăn truyền từ bố mẹ sang con là hiện tượng truyền đạt tính trạng di truyền qua các thế hệ con cháu."
+            },
+            {
+                id: 30,
+                question: "Hiện tượng nào sau đây là minh chứng rõ rệt nhất cho hiện tượng 'biến dị'?",
+                options: [
+                    "Bố mẹ tóc thẳng sinh ra con có tóc thẳng giống hệt bố mẹ.",
+                    "Cặp vợ chồng tóc xoăn sinh ra con thứ nhất tóc xoăn, con thứ hai lại tóc thẳng.",
+                    "Hạt của cây đậu hoa tím thuần chủng mọc lên cây con 100% hoa tím.",
+                    "Các cây con mọc ra từ củ khoai tây mẹ có hình dạng củ giống mẹ."
+                ],
+                correct: 1,
+                explain: "Việc con cái sinh ra có đặc điểm khác nhau và khác bố mẹ (bố mẹ tóc xoăn sinh con tóc thẳng) là biểu hiện của biến dị."
+            },
+            {
+                id: 31,
+                question: "Khi phát sinh giao tử, các nhân tố di truyền trong cặp nhân tố di truyền sẽ:",
+                options: [
+                    "Hòa trộn vào nhau rồi phân chia ngẫu nhiên.",
+                    "Phân li độc lập, mỗi giao tử chỉ nhận một nhân tố di truyền trong cặp.",
+                    "Cùng đi về một giao tử duy nhất.",
+                    "Biến đổi cấu trúc hóa học trước khi phân chia."
+                ],
+                correct: 1,
+                explain: "Trong quá trình phát sinh giao tử, cặp nhân tố di truyền phân li độc lập, mỗi giao tử chỉ nhận một nhân tố di truyền trong cặp tương ứng."
+            },
+            {
+                id: 32,
+                question: "Đặc tính di truyền nào sau đây thuộc về dòng thuần chủng?",
+                options: [
+                    "Đồng nhất, ổn định di truyền, thế hệ con cháu giống thế hệ trước.",
+                    "Thế hệ sau có sự biến đổi và phân tính cực kỳ phức tạp.",
+                    "Luôn mang kiểu gene dị hợp tử chiếm ưu thế tuyệt đối.",
+                    "Chỉ biểu hiện ra kiểu hình lặn qua mọi phép lai chéo."
+                ],
+                correct: 0,
+                explain: "Dòng thuần chủng có đặc tính di truyền đồng nhất, ổn định và các thế hệ sau giống thế hệ trước."
+            },
+            {
+                id: 33,
+                question: "Giả sử kí hiệu T là allele trội hoa tím, t là allele lặn hoa trắng. Trong số các cây hoa tím thu được ở F2, cây thuần chủng chiếm tỉ lệ bao nhiêu?",
+                options: [
+                    "Tất cả các cây hoa tím ở F2 đều thuần chủng.",
+                    "Không có cây nào thuần chủng.",
+                    "Chiếm tỉ lệ 1/3 trong tổng số các cây hoa tím ở F2.",
+                    "Chiếm tỉ lệ 3/4 trong tổng số các cây hoa tím ở F2."
+                ],
+                correct: 2,
+                explain: "Ở F2 tỉ lệ kiểu gene là 1 TT : 2 Tt : 1 tt. Trong số các cây hoa tím (1 TT và 2 Tt), cây thuần chủng TT chiếm tỉ lệ 1/3."
+            },
+            {
+                id: 34,
+                question: "Tại sao ở F1 tính trạng hoa trắng không biểu hiện nhưng đến F2 lại xuất hiện lại với tỉ lệ 1/4?",
+                options: [
+                    "Vì allele quy định hoa trắng bị che khuất ở dị hợp tử F1 và xuất hiện lại khi ở trạng thái đồng hợp lặn ở F2.",
+                    "Vì allele quy định hoa trắng bị biến đổi hóa học đột ngột tại thế hệ F2.",
+                    "Vì F1 bị đột biến cấu trúc nhiễm sắc thể do môi trường.",
+                    "Vì có sự tác động của các loài côn trùng thụ phấn nhân tạo."
+                ],
+                correct: 0,
+                explain: "Allele lặn (hoa trắng) không biến mất ở F1 mà chỉ bị allele trội (hoa tím) át chế, khi F1 tự thụ phấn tạo ra kiểu gene đồng hợp lặn ở F2 thì tính trạng hoa trắng lại được biểu hiện."
+            },
+            {
+                id: 35,
+                question: "Nếu tính trạng lặn chỉ được biểu hiện khi kiểu gene ở trạng thái đồng hợp lặn, kiểu gene nào dưới đây sẽ biểu hiện tính trạng lặn?",
+                options: [
+                    "AA.",
+                    "Aa.",
+                    "aa.",
+                    "Cả Aa và aa."
+                ],
+                correct: 2,
+                explain: "Tính trạng lặn chỉ được biểu hiện ra kiểu hình khi kiểu gene ở trạng thái đồng hợp lặn (aa)."
+            },
+            {
+                id: 36,
+                question: "Theo quan điểm của Mendel, các nhân tố di truyền tồn tại trong cơ thể sinh vật:",
+                options: [
+                    "Từng nhân tố riêng biệt và phân bố rải rác ngoài tế bào chất.",
+                    "Tồn tại thành từng cặp trong tế bào và không hòa trộn vào nhau.",
+                    "Hòa trộn hoàn toàn vào nhau tạo nên các đặc điểm trung gian.",
+                    "Chỉ tồn tại ở tế bào sinh dục của các cá thể thuần chủng."
+                ],
+                correct: 1,
+                explain: "Mendel cho rằng các nhân tố di truyền tồn tại thành từng cặp trong tế bào và giữ nguyên bản chất, không hòa trộn vào nhau."
+            },
+            {
+                id: 37,
+                question: "Cơ thể có kiểu gene dị hợp Aa (nếu trội hoàn toàn) sẽ biểu hiện kiểu hình của:",
+                options: [
+                    "Tính trạng trội.",
+                    "Tính trạng lặn.",
+                    "Tính trạng trung gian.",
+                    "Cả tính trạng trội và lặn."
+                ],
+                correct: 0,
+                explain: "Trong trường hợp trội hoàn toàn, cơ thể dị hợp Aa sẽ biểu hiện kiểu hình của tính trạng trội do allele trội át chế hoàn toàn allele lặn."
+            },
+            {
+                id: 38,
+                question: "Điều nào sau đây là KHÔNG đúng khi nói về allele?",
+                options: [
+                    "Một gene có thể có một hoặc nhiều trạng thái allele khác nhau.",
+                    "Mỗi allele chính là một trạng thái cụ thể biểu hiện của cùng một gene.",
+                    "Cơ thể lưỡng bội bình thường (2n) luôn chứa vô số allele khác nhau cho cùng một gene trong mỗi tế bào.",
+                    "Mỗi allele có trình tự nucleotide đặc trưng riêng biệt."
+                ],
+                correct: 2,
+                explain: "Ở một cơ thể lưỡng bội bình thường (2n), mỗi gene trong tế bào sinh dưỡng chỉ chứa tối đa 2 allele (có thể giống hoặc khác nhau)."
+            },
+            {
+                id: 39,
+                question: "Thí nghiệm lai một cặp tính trạng (màu hoa) của Mendel được chi phối bởi:",
+                options: [
+                    "Một cặp nhân tố di truyền (gồm 2 allele).",
+                    "Ba cặp nhân tố di truyền tương tác phức tạp.",
+                    "Vô số các nhân tố di truyền pha trộn tự do.",
+                    "Tác động trực tiếp từ nhiệt độ không khí bên ngoài."
+                ],
+                correct: 0,
+                explain: "Mỗi tính trạng màu hoa tím/trắng trong thí nghiệm lai một cặp tính trạng của Mendel do một cặp nhân tố di truyền (2 allele) quy định."
+            },
+            {
+                id: 40,
+                question: "Vì sao các phát kiến của Mendel lại là cơ sở khoa học quan trọng cho lý thuyết về gene ngày nay?",
+                options: [
+                    "Vì ông đã trực tiếp chiết tách và mô tả chính xác chuỗi xoắn kép DNA dưới kính hiển vi.",
+                    "Vì ý tưởng về nhân tố di truyền độc lập, tồn tại thành cặp và phân li khi tạo giao tử của ông tương đồng hoàn hảo với bản chất hoạt động của gene ngày nay.",
+                    "Vì ông đã chứng minh môi trường bên ngoài làm biến đổi vĩnh viễn cấu trúc di truyền.",
+                    "Vì ông chỉ ra các tính trạng di truyền liên kết chặt chẽ với nhau mà không bao giờ phân li."
+                ],
+                correct: 1,
+                explain: "Ý tưởng về nhân tố di truyền tồn tại thành cặp độc lập của Mendel chính là nền tảng sơ khai chuẩn xác nhất dự đoán sự tồn tại và vận động của các gene sau này."
+            }
+        ];
+
+        // Dữ liệu 2 câu hỏi Đúng / Sai (mỗi câu gồm 5 ý phụ)
+        const tfQuestions = [
+            {
+                id: 41,
+                question: "Đọc các nhận định dưới đây về các thuật ngữ và kí hiệu dùng trong nghiên cứu di truyền học và xác định tính Đúng/Sai của chúng:",
+                items: [
+                    { text: "A. Tính trạng là các đặc điểm về hình thái, cấu tạo, sinh lí của một cơ thể sinh vật.", correct: "Đúng", explain: "Định nghĩa tính trạng hoàn toàn chính xác theo SGK." },
+                    { text: "B. Kiểu hình là tổ hợp toàn bộ gene nằm trong tế bào của cơ thể sinh vật.", correct: "Sai", explain: "Định nghĩa này sai. Tổ hợp toàn bộ gene là kiểu gene, còn tổ hợp toàn bộ tính trạng mới là kiểu hình." },
+                    { text: "C. Allele là các trạng thái biểu hiện khác nhau của cùng một gene.", correct: "Đúng", explain: "Đây là định nghĩa chuẩn xác về allele." },
+                    { text: "D. Cơ thể thuần chủng về một tính trạng đang xét có kiểu gene đồng hợp (gồm các allele giống nhau).", correct: "Đúng", explain: "Cơ thể thuần chủng luôn có kiểu gene đồng hợp về tính trạng đó." },
+                    { text: "E. Kí hiệu di truyền 'F2' là kí hiệu biểu thị cho thế hệ bố mẹ xuất phát thuần chủng.", correct: "Sai", explain: "Kí hiệu P mới là thế hệ bố mẹ xuất phát, F2 là thế hệ con lai đời thứ hai." }
+                ]
+            },
+            {
+                id: 42,
+                question: "Đọc các nhận định dưới đây về phương pháp nghiên cứu và thí nghiệm lai một cặp tính trạng của Gregor Mendel và xác định tính Đúng/Sai:",
+                items: [
+                    { text: "A. Mendel chọn Đậu Hà Lan làm đối tượng vì chúng tự thụ phấn nghiêm ngặt và dễ tạo dòng thuần chủng.", correct: "Đúng", explain: "Đặc điểm tự thụ phấn nghiêm ngặt của Đậu Hà Lan giúp dễ dàng tạo và duy trì dòng thuần." },
+                    { text: "B. Khi lai cây hoa tím thuần chủng với hoa trắng thuần chủng, thế hệ F1 thu được tỉ lệ kiểu hình 3 tím : 1 trắng.", correct: "Sai", explain: "Thế hệ F1 thu được 100% cây hoa tím. Tỉ lệ 3:1 chỉ xuất hiện ở thế hệ F2." },
+                    { text: "C. Sự xuất hiện lại tính trạng hoa trắng ở F2 chứng tỏ nhân tố di truyền quy định hoa trắng không bị mất đi ở F1 mà chỉ bị che khuất.", correct: "Đúng", explain: "Đúng, tính trạng hoa trắng bị che khuất ở dị hợp F1 và xuất hiện lại ở đồng hợp lặn F2." },
+                    { text: "D. Các nhân tố di truyền quy định các tính trạng của cơ thể sinh vật hòa trộn hoàn toàn vào nhau ở thế hệ con.", correct: "Sai", explain: "Mendel chứng minh các nhân tố di truyền không hòa trộn vào nhau mà giữ nguyên bản chất qua các thế hệ." },
+                    { text: "E. Mendel cho rằng mỗi tính trạng do một cặp nhân tố di truyền quy định.", correct: "Đúng", explain: "Đúng, đây là giả thuyết cốt lõi của Mendel để giải thích tỉ lệ phân li ở thế hệ lai." }
+                ]
+            }
+        ];
+
+        // Dữ liệu 8 câu hỏi trả lời ngắn (điền từ)
+        const saQuestions = [
+            {
+                id: 43,
+                question: "Hiện tượng truyền đạt các tính trạng của bố mẹ, tổ tiên cho các thế hệ con cháu được gọi là hiện tượng gì? (Điền một từ/cụm từ)",
+                correctAnswers: ["di truyền"],
+                placeholder: "Nhập đáp án...",
+                explain: "Hiện tượng truyền đạt tính trạng từ thế hệ trước sang thế hệ sau gọi là di truyền."
+            },
+            {
+                id: 44,
+                question: "Hiện tượng con sinh ra có những đặc điểm khác nhau và khác bố mẹ được gọi là gì? (Điền một từ/cụm từ)",
+                correctAnswers: ["biến dị"],
+                placeholder: "Nhập đáp án...",
+                explain: "Hiện tượng con sinh ra khác nhau và khác bố mẹ được gọi là biến dị."
+            },
+            {
+                id: 45,
+                question: "Mendel đã sử dụng loài đậu nào làm đối tượng nghiên cứu di truyền chính? (Nhập tên đầy đủ của loài đậu này bằng tiếng Việt)",
+                correctAnswers: ["đậu hà lan", "đậu hà lan."],
+                placeholder: "Nhập tên loài đậu...",
+                explain: "Mendel đã chọn loài Đậu Hà Lan làm đối tượng nghiên cứu di truyền chính."
+            },
+            {
+                id: 46,
+                question: "Các cơ thể đồng hợp về tất cả các cặp gene, có đặc tính di truyền đồng nhất và ổn định qua các đời được gọi là dòng gì? (Điền từ/cụm từ thích hợp)",
+                correctAnswers: ["dòng thuần", "dòng thuần chủng"],
+                placeholder: "Nhập thuật ngữ...",
+                explain: "Dòng thuần (hay dòng thuần chủng) là dòng sinh vật có kiểu gene đồng hợp tử về tất cả các cặp gene."
+            },
+            {
+                id: 47,
+                question: "Trong kí hiệu nghiên cứu di truyền học, chữ cái in hoa nào được dùng để biểu thị cho thế hệ bố mẹ xuất phát?",
+                correctAnswers: ["p"],
+                placeholder: "Nhập 1 chữ cái duy nhất...",
+                explain: "Kí hiệu P (Parentes) biểu thị cho thế hệ bố mẹ xuất phát."
+            },
+            {
+                id: 48,
+                question: "Trong di truyền học hiện đại, các 'nhân tố di truyền' mà Mendel giả định ngày nay được gọi là gì? (Điền một từ)",
+                correctAnswers: ["gene", "gen"],
+                placeholder: "Nhập từ cần điền...",
+                explain: "Nhân tố di truyền nằm trong tế bào quy định tính di truyền được gọi là gene."
+            },
+            {
+                id: 49,
+                question: "Các trạng thái biểu hiện khác nhau của cùng một gene được gọi là gì? (Điền một từ/thuật ngữ)",
+                correctAnswers: ["allele", "alen"],
+                placeholder: "Nhập thuật ngữ...",
+                explain: "Allele (hay alen) là các trạng thái biểu hiện khác nhau của cùng một gene."
+            },
+            {
+                id: 50,
+                question: "Tổ hợp toàn bộ các tính trạng về hình thái, cấu tạo, sinh lí của cơ thể sinh vật được gọi là gì? (Điền một từ/cụm từ)",
+                correctAnswers: ["kiểu hình"],
+                placeholder: "Nhập cụm từ cần điền...",
+                explain: "Kiểu hình là tổ hợp toàn bộ tính trạng của cơ thể sinh vật."
+            }
+        ];
+
+        // Hàm dựng câu hỏi lên trang web
+        function renderQuiz() {
+            // Render Phần Trắc nghiệm
+            const mcContainer = document.getElementById('multiple-choice-container');
+            mcContainer.innerHTML = mcQuestions.map((q) => `
+                <div class="question-card" id="q-card-${q.id}">
+                    <div class="question-num">Câu ${q.id} (Trắc nghiệm)</div>
+                    <div class="question-text">${q.question}</div>
+                    <ul class="options-list">
+                        ${q.options.map((opt, i) => `
+                            <li class="option-item">
+                                <label class="option-label">
+                                    <input type="radio" name="q-${q.id}" value="${i}">
+                                    <span>${String.fromCharCode(65 + i)}. ${opt}</span>
+                                </label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div class="feedback" id="feedback-${q.id}"></div>
+                </div>
+            `).join('');
+
+            // Render Phần Đúng / Sai
+            const tfContainer = document.getElementById('true-false-container');
+            tfContainer.innerHTML = tfQuestions.map((q) => `
+                <div class="question-card" id="q-card-${q.id}">
+                    <div class="question-num">Câu ${q.id} (Đúng / Sai)</div>
+                    <div class="question-text">${q.question}</div>
+                    <table class="tf-table">
+                        <thead>
+                            <tr>
+                                <th>Nhận định phát biểu</th>
+                                <th style="width: 140px; text-align: center;">Lựa chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${q.items.map((item, idx) => `
+                                <tr>
+                                    <td>${item.text}</td>
+                                    <td style="text-align: center;">
+                                        <div class="tf-options" style="justify-content: center;">
+                                            <label class="tf-label">
+                                                <input type="radio" name="q-${q.id}-${idx}" value="Đúng"> Đ
+                                            </label>
+                                            <label class="tf-label">
+                                                <input type="radio" name="q-${q.id}-${idx}" value="Sai"> S
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div class="feedback" id="feedback-${q.id}"></div>
+                </div>
+            `).join('');
+
+            // Render Phần Trả lời ngắn
+            const saContainer = document.getElementById('short-answer-container');
+            saContainer.innerHTML = saQuestions.map((q) => `
+                <div class="question-card" id="q-card-${q.id}">
+                    <div class="question-num">Câu ${q.id} (Trả lời ngắn)</div>
+                    <div class="question-text">${q.question}</div>
+                    <div style="margin-bottom: 15px;">
+                        <input type="text" class="short-answer-input" id="input-${q.id}" placeholder="${q.placeholder}">
+                    </div>
+                    <div class="feedback" id="feedback-${q.id}"></div>
+                </div>
+            `).join('');
+        }
+
+        // Hàm nộp bài và tính điểm tự động
+        function submitQuiz() {
+            let totalScore = 0;
+            const totalQuestions = 50;
+
+            // 1. Chấm Phần Trắc nghiệm
+            mcQuestions.forEach(q => {
+                const selectedInput = document.querySelector(`input[name="q-${q.id}"]:checked`);
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                
+                let isCorrect = false;
+                let userAnsText = "Chưa chọn đáp án";
+                
+                if (selectedInput) {
+                    const selectedIdx = parseInt(selectedInput.value);
+                    userAnsText = String.fromCharCode(65 + selectedIdx);
+                    if (selectedIdx === q.correct) {
+                        isCorrect = true;
+                        totalScore += 1;
+                    }
+                }
+
+                const correctAnsLetter = String.fromCharCode(65 + q.correct);
+                
+                if (isCorrect) {
+                    feedbackDiv.className = "feedback correct";
+                    feedbackDiv.innerHTML = `
+                        <strong>Chính xác!</strong> Bạn chọn đáp án ${userAnsText}.<br>
+                        <div class="explanation"><strong>Giải thích:</strong> ${q.explain}</div>
+                    `;
+                } else {
+                    feedbackDiv.className = "feedback incorrect";
+                    feedbackDiv.innerHTML = `
+                        <strong>Chưa đúng!</strong> Bạn chọn đáp án ${userAnsText}. Đáp án đúng là <strong>${correctAnsLetter}</strong>.<br>
+                        <div class="explanation"><strong>Giải thích:</strong> ${q.explain}</div>
+                    `;
+                }
+            });
+
+            // 2. Chấm Phần Đúng / Sai
+            tfQuestions.forEach(q => {
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                let correctCount = 0;
+                let detailsHTML = "<ul style='margin: 5px 0; padding-left: 20px;'>";
+
+                q.items.forEach((item, idx) => {
+                    const selectedInput = document.querySelector(`input[name="q-${q.id}-${idx}"]:checked`);
+                    const userVal = selectedInput ? selectedInput.value : "Chưa trả lời";
+                    
+                    const isItemCorrect = (userVal === item.correct);
+                    if (isItemCorrect) {
+                        correctCount++;
+                    }
+
+                    detailsHTML += `
+                        <li>
+                            <strong>Ý ${item.text.charAt(0)}:</strong> ${item.text.substring(3)}<br>
+                            - Bạn chọn: <span class="${isItemCorrect ? 'text-correct' : 'text-incorrect'}">${userVal}</span> | 
+                            Đáp án: <span class="text-correct">${item.correct}</span><br>
+                            <span style="font-size:0.85em; color:#555;">(Giải thích: ${item.explain})</span>
+                        </li>
+                    `;
+                });
+
+                detailsHTML += "</ul>";
+                
+                // Mỗi câu Đúng/Sai đúng hoàn toàn cả 5 ý đạt 1 điểm (mỗi ý đúng đạt 0.2 điểm)
+                const questionScore = correctCount / 5;
+                totalScore += questionScore;
+
+                if (correctCount === 5) {
+                    feedbackDiv.className = "feedback correct";
+                    feedbackDiv.innerHTML = `
+                        <strong>Tuyệt vời!</strong> Bạn trả lời đúng cả 5/5 ý (Đạt ${questionScore} điểm).<br>
+                        ${detailsHTML}
+                    `;
+                } else {
+                    feedbackDiv.className = "feedback incorrect";
+                    feedbackDiv.innerHTML = `
+                        <strong>Kết quả:</strong> Bạn trả lời đúng ${correctCount}/5 ý (Đạt ${questionScore.toFixed(1)} điểm).<br>
+                        ${detailsHTML}
+                    `;
+                }
+            });
+
+            // 3. Chấm Phần Trả lời ngắn
+            saQuestions.forEach(q => {
+                const inputVal = document.getElementById(`input-${q.id}`).value.trim().toLowerCase();
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                
+                let isCorrect = false;
+                if (q.correctAnswers.includes(inputVal)) {
+                    isCorrect = true;
+                    totalScore += 1;
+                }
+
+                if (isCorrect) {
+                    feedbackDiv.className = "feedback correct";
+                    feedbackDiv.innerHTML = `
+                        <strong>Chính xác!</strong> Bạn điền: "${document.getElementById(`input-${q.id}`).value}".<br>
+                        <div class="explanation"><strong>Giải thích:</strong> ${q.explain}</div>
+                    `;
+                } else {
+                    const primaryCorrectAns = q.correctAnswers[0];
+                    feedbackDiv.className = "feedback incorrect";
+                    feedbackDiv.innerHTML = `
+                        <strong>Chưa đúng!</strong> Bạn điền: "${document.getElementById(`input-${q.id}`).value || 'để trống'}".<br>
+                        Gợi ý đáp án chính xác: <strong>"${primaryCorrectAns}"</strong>.<br>
+                        <div class="explanation"><strong>Giải thích:</strong> ${q.explain}</div>
+                    `;
+                }
+            });
+
+            // Hiển thị khung điểm kết quả
+            const resultBox = document.getElementById('result-box');
+            resultBox.style.display = 'block';
+            document.getElementById('score-text').innerText = `${totalScore.toFixed(1)} / ${totalQuestions}`;
+            document.getElementById('result-summary').innerText = `Bạn đã hoàn thành bài luyện tập với số điểm là ${totalScore.toFixed(1)} trên tổng điểm tối đa ${totalQuestions}.`;
+            
+            // Cuộn màn hình lên đầu khung kết quả mượt mà
+            resultBox.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Chạy khởi tạo bài kiểm tra
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
